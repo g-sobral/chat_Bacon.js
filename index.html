@@ -1,0 +1,57 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Socket.IO chat</title>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body { font: 13px Helvetica, Arial; }
+      form { background: #000; padding: 3px; width: 100%; }
+      .form-holder { position: absolute; bottom: 0; width: 100%; }
+      form input { border: 0; padding: 15px; margin-right: .5%; margin-left: .5%; width: 80%;}
+      form button { width: 19%; background: rgb(130, 224, 255); border: none; padding: 15px; }
+      #messages { list-style-type: none; margin: 0; padding: 0; }
+      #messages li { padding: 5px 10px; }
+      #messages li:nth-child(odd) { background: #eee; }
+    </style>
+  </head>
+  <body>
+    
+    <ul id="messages"></ul>
+
+    <div class="form-holder">
+      <table style="width:100%">
+        <tr>
+          <td width="70%">
+            <form id="mform" name="message" action="">
+              <input id="m" autocomplete="off" /><button>Send Message</button>
+            </form>
+          </td>
+          <td width="30%">
+            <form id="nickform" name="nickname" action="">
+              <input id="nick" autocomplete="off" /><button>Nickname</button>
+            </form>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+    <script>
+      var socket = io();
+      $("#mform").submit(function(){
+        socket.emit('message', $('#m').val());
+        $('#m').val('');
+        return false;
+      });
+      $("#nickform").submit(function(){
+        socket.emit('nickname', $('#nick').val());
+        $('#nick').val('');
+        return false;
+      });
+      socket.on('message', function(msg){
+        $('#messages').append($('<li>').text(msg));
+      });
+    </script>
+  </body>
+</html>
